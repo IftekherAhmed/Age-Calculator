@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <style>
+        .form,
+        .result {
+            width: 45%;
+            float: left;
+            margin: 20px 20px;
+            border: 1px solid cadetblue;
+        }
+        
+        .form .header,
+        .result .header {
+            background: cadetblue;
+            padding: 7px;
+        }
+        
+        .form form {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form label {
+            color: cadetblue;
+            margin: 10px 0 0 5px;
+        }
+        
+        .form input,
+        .form select,
+        .form button {
+            margin: 5px;
+            border: 1px solid cadetblue;
+            padding: 10px;
+        }
+        
+        .form button {
+            background: cadetblue;
+        }
+        
+        .result .content {
+            padding: 20px;
+        }
+        
+        .result h2,
+        h3,
+        h4 {
+            margin: 0;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ececec;
+        }
+        
+        .result .footer {
+            background: #F9CC9D;
+            padding: 7px;
+        }
+        
+        .result p {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="form">
+        <div class="header">Age Calculator</div>
+        <form method="POST" action="">
+            <label for="i_year">Year</label>
+            <input type="text" name="year" id="i_year" value="1995">
+            <label for="i_month">Month</label>
+            <select name="month" id="i_month">
+                <option value="0">January</option>
+                <option value="01">February</option>
+                <option value="02">March</option>
+                <option value="03">April</option>
+                <option value="04">May</option>
+                <option value="05" selected>June</option>
+                <option value="06">July</option>
+                <option value="07">August</option>
+                <option value="08">September</option>
+                <option value="09">October</option>
+                <option value="10">November</option>
+                <option value="11">December</option>
+            </select>
+            <label for="i_day">Day</label>
+            <input type="text" name="day" id="i_day" value="11">
+            <button type="submit" id="i_submit">Submit</button>
+        </form>
+    </div>
+    <div class="result">
+        <div class="header">Your Age Today</div>
+        <div class="content">
+            <h2 id="r_years">Years</h2>
+            <h3 id="r_months">Months</h3>
+            <h4 id="r_days">Days</h4>
+        </div>
+        <div class="footer">
+            <p id="result">Please Put Your Age!</p>
+        </div>
+    </div>
+
+    <script src="jquery.min.js">
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#i_submit').click(function(e) {
+                e.preventDefault();
+
+                var i_year = $('#i_year').val();
+                var i_month = $('#i_month').val();
+                var i_day = $('#i_day').val();
+
+                var now = new Date();
+                var yearNow = now.getFullYear();
+                var monthNow = now.getMonth();
+                var dateNow = now.getDate();
+                var age = {};
+                var ageString = "";
+                var yearString = "";
+                var monthString = "";
+                var dayString = "";
+
+                yearAge = yearNow - i_year;
+
+                if (monthNow >= i_month)
+                    var monthAge = monthNow - i_month;
+                else {
+                    yearAge--;
+                    var monthAge = 12 + monthNow - i_month;
+                }
+
+                if (dateNow >= i_day)
+                    var dateAge = dateNow - i_day;
+                else {
+                    monthAge--;
+                    var dateAge = 31 + dateNow - i_day;
+
+                    if (monthAge < 0) {
+                        monthAge = 11;
+                        yearAge--;
+                    }
+                }
+
+                age = {
+                    years: yearAge,
+                    months: monthAge,
+                    days: dateAge
+                };
+
+                if (age.years > 1) yearString = " years";
+                else yearString = " year";
+                if (age.months > 1) monthString = " months";
+                else monthString = " month";
+                if (age.days > 1) dayString = " days";
+                else dayString = " day";
+
+
+                if ((age.years > 0) && (age.months > 0) && (age.days > 0))
+                    ageString = age.years + yearString + ", " + age.months + monthString + ", and " + age.days + dayString + " old.";
+                else if ((age.years == 0) && (age.months == 0) && (age.days > 0))
+                    ageString = "Only " + age.days + dayString + " old!";
+                else if ((age.years > 0) && (age.months == 0) && (age.days == 0))
+                    ageString = age.years + yearString + " old. Happy Birthday!!";
+                else if ((age.years > 0) && (age.months > 0) && (age.days == 0))
+                    ageString = age.years + yearString + " and " + age.months + monthString + " old.";
+                else if ((age.years == 0) && (age.months > 0) && (age.days > 0))
+                    ageString = age.months + monthString + " and " + age.days + dayString + " old.";
+                else if ((age.years > 0) && (age.months == 0) && (age.days > 0))
+                    ageString = age.years + yearString + " and " + age.days + dayString + " old.";
+                else if ((age.years == 0) && (age.months > 0) && (age.days == 0))
+                    ageString = age.months + monthString + " old.";
+                else ageString = "Oops! Could not calculate age!";
+
+
+                $('#r_years').html(age.years + yearString);
+                $('#r_months').html(age.months + monthString);
+                $('#r_days').html(age.days + dayString);
+                $('#result').html(ageString);
+            });
+        });
+    </script>
+</body>
+
+</html>
